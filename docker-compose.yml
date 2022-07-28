@@ -39,7 +39,17 @@ services:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     depends_on:
       - mongo_project-manager
-    command: bash -c "mkdir -p /backend && cd /backend && npm i && npm start"
+    command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn dev"
+  api_project-manager_ts:
+    restart: always
+    image: node:16.16.0
+    volumes:
+      - ~/Projects/api_project-manager_ts:/backend
+    ports:
+      - ${BACKEND_PORT_TS}:${BACKEND_PORT_TS}
+    depends_on:
+      - mongo_project-manager
+    command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn dev"
   project-manager:
     restart: always
     image: node:16.16.0
@@ -47,4 +57,4 @@ services:
       - ~/Projects/project-manager:/frontend
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
-    command: bash -c "mkdir -p /frontend && cd /frontend && npm i && npm run dev"
+    command: bash -c "mkdir -p /frontend && cd /frontend && yarn install && yarn dev"
