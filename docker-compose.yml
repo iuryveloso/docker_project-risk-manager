@@ -4,7 +4,7 @@ services:
     restart: always
     image: mongo:5.0.9
     volumes:
-      - ./dados:/data/db
+      - mongodb_data:/data/db
     ports:
       -  ${MONGO_PORT}:${MONGO_PORT}
     environment:
@@ -30,6 +30,17 @@ services:
 
     depends_on:
       - mongo_project-manager
+  redis_project-manager:
+    restart: always
+    image: redis:7.0.4
+    hostname: redis
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 20 1 --loglevel warning --appendonly yes --requirepass ${REDIS_PASSWORD}
+    environment:
+      - REDIS_REPLICATION_MODE=master
   api_project-manager:
     restart: always
     image: node:16.16.0
@@ -39,16 +50,7 @@ services:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     depends_on:
       - mongo_project-manager
-    command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn dev"
-  api_project-manager_ts:
-    restart: always
-    image: node:16.16.0
-    volumes:
-      - ~/Projects/api_project-manager_ts:/backend
-    ports:
-      - ${BACKEND_PORT_TS}:${BACKEND_PORT_TS}
-    depends_on:
-      - mongo_project-manager
+      - redis_project-manager
     command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn dev"
   project-manager:
     restart: always
@@ -58,3 +60,16 @@ services:
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     command: bash -c "mkdir -p /frontend && cd /frontend && yarn install && yarn dev"
+  redisInsight_project-manager:
+    restart: always
+    image: redislabs/redisinsight
+    ports:
+      - ${REDIS_INSIGHT_PORT}:${REDIS_INSIGHT_PORT}
+    volumes:
+      - redisInsight:/db
+    depends_on:
+      - redis_project-manager
+volumes:
+  mongodb_data:
+  redis_data:
+  redisInsight:
