@@ -39,7 +39,10 @@ services:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     depends_on:
       - mongo_project-manager
+    ## Uncomment the line below, if you want to use the development mode
     command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn dev"
+    ## Uncomment the line below, if you want to use the production mode
+    # command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn start"
   project-manager:
     restart: always
     image: node:16.16.0
@@ -47,6 +50,9 @@ services:
       - ~/Projects/project-manager:/frontend
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    ## Uncomment the line below, if you want to use the development mode
     command: bash -c "mkdir -p /frontend && cd /frontend && yarn install && yarn dev"
+    ## Uncomment the line below, if you want to use the production mode
+    # command: bash -c "mkdir -p /frontend && cd /frontend && yarn install && yarn build && yarn start"
 volumes:
   mongodb_data:
