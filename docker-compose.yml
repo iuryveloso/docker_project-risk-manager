@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-  mongo_project-manager:
+  mongo_project-risk-manager:
     restart: always
     image: mongo:5.0.9
     volumes:
@@ -11,13 +11,13 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=project_manager
-  mongo_express_project-manager:
+  mongo_express_project-risk-manager:
     restart: always
     image: mongo-express:0.54
     ports:
       - ${ME_PORT}:${ME_PORT}
     environment:
-      - ME_CONFIG_MONGODB_SERVER=mongo_project-manager
+      - ME_CONFIG_MONGODB_SERVER=mongo_project-risk-manager
       - ME_CONFIG_MONGODB_PORT=${MONGO_PORT}
       - ME_CONFIG_MONGODB_ENABLE_ADMIN=${ME_CONFIG_MONGODB_ENABLE_ADMIN}
       - ME_CONFIG_BASICAUTH_USERNAME=${ME_CONFIG_BASICAUTH_USERNAME}
@@ -29,30 +29,30 @@ services:
       - ME_CONFIG_MONGODB_AUTH_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
 
     depends_on:
-      - mongo_project-manager
-  api_project-manager:
+      - mongo_project-risk-manager
+  api_project-risk-manager:
     restart: always
     image: node:16.16.0
     volumes:
-      - ~/Projects/api_project-manager:/backend
+      - ~/Projects/api_project-risk-manager:/backend
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     depends_on:
-      - mongo_project-manager
-    ## Uncomment the line below, if you want to use the development mode
+      - mongo_project-risk-manager
+    ## Descomente a linha abaixo para rodar no modo desenvolvedor 
     command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn dev"
-    ## Uncomment the line below, if you want to use the production mode
-    # command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn start"
-  project-manager:
+    ## Descomente a linha abaixo para rodar no modo de produção 
+    # command: bash -c "mkdir -p /backend && cd /backend && yarn install && yarn build && yarn start"
+  project-risk-manager:
     restart: always
     image: node:16.16.0
     volumes:
-      - ~/Projects/project-manager:/frontend
+      - ~/Projects/project-risk-manager:/frontend
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
-    ## Uncomment the line below, if you want to use the development mode
+    ## Descomente a linha abaixo para rodar no modo desenvolvedor 
     command: bash -c "mkdir -p /frontend && cd /frontend && yarn install && yarn dev"
-    ## Uncomment the line below, if you want to use the production mode
+    ## Descomente a linha abaixo para rodar no modo de produção 
     # command: bash -c "mkdir -p /frontend && cd /frontend && yarn install && yarn build && yarn start"
 volumes:
   mongodb_data:
