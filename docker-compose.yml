@@ -4,7 +4,7 @@ services:
     restart: always
     image: mongo:5.0.9
     volumes:
-      - mongodb_data:/data/db
+      - ~/Projects/docker_project-risk-manager/data:/data/db
     ports:
       -  ${MONGO_PORT}:${MONGO_PORT}
     environment:
@@ -54,5 +54,5 @@ services:
     command: bash -c "mkdir -p /frontend && cd /frontend && yarn install && yarn dev"
     ## Descomente a linha abaixo para rodar no modo de produção 
     # command: bash -c "mkdir -p /frontend && cd /frontend && yarn install && yarn build && yarn start"
-volumes:
-  mongodb_data:
+#volumes:
+  #mongodb_data:
